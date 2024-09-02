@@ -10,6 +10,7 @@ import (
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method == http.MethodGet {
 		tmpl := template.Must(template.ParseFiles("templates/register.html"))
 		tmpl.Execute(w, nil)
@@ -17,44 +18,55 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodPost {
-		email := r.FormValue("email")
-		username := r.FormValue("username")
-		password := r.FormValue("password")
 
-		if utilis.UserExists(email) {
-			http.Error(w, "Email already exists", http.StatusConflict)
+		// fmt.Println(r.Header["Content-Type"])
+		// email := r.FormValue("email")
+		// username := r.FormValue("username")
+		// password := r.FormValue("password")
+
+		// if utilis.UserExists(email) {
+		// 	http.Error(w, "Email already exists", http.StatusConflict)
+		// 	return
+		// }
+		var user struct {
+			Email    string `json:"email"`
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+			http.Error(w, "Invalid input", http.StatusBadRequest)
 			return
 		}
-		// var user struct {
-		// 	Email    string `json:"email"`
-		// 	Username string `json:"username"`
-		// 	Password string `json:"password"`
-		// }
-		hashedPassword, err := utilis.HashPassword(password)
+
+		if utilis.UserExists(user.Email) {
+			w.Header().Set("Content-Type", "application/json")
+            json.NewEncoder(w).Encode(map[string]string{
+                "emailError": "Email already exists.",
+            })
+            return
+			
+		}
+		hashedPassword, err := utilis.HashPassword(user.Password)
 		if err != nil {
-			http.Error(w, "Error hashing password", http.StatusInternalServerError)
+			tmpl := template.Must(template.ParseFiles("templates/register.html"))
+			tmpl.Execute(w, map[string]string{
+				"EmailError":    "",
+				"UsernameError": "Username already exists.",
+				"PasswordError": "",
+			})
 			return
 		}
 
 		// Insert the user into the database
-		err = utilis.InsertUser(email, username, hashedPassword)
+		err = utilis.InsertUser(user.Email, user.Username, hashedPassword)
 		if err != nil {
 			http.Error(w, "Error inserting user", http.StatusInternalServerError)
 			return
 		}
+		// v := json.NewDecoder(r.Body)
+		// fmt.Println(v, "hello ")
 
-		// if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		// 	http.Error(w, "Invalid input", http.StatusBadRequest)
-		// 	return
-		// }
-
-		// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-		// if err != nil {
-		// 	http.Error(w, "Error hashing password", http.StatusInternalServerError)
-		// 	return
-		// }
-
-		// _, err = utils.DB.Exec("INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
+		// _, err = utilis.DB.Exec("INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
 		// 	user.Email, user.Username, hashedPassword)
 		// if err != nil {
 		// 	http.Error(w, "Error inserting user", http.StatusInternalServerError)

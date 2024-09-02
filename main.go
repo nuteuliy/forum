@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+
 func main() {
 	// http.HandleFunc("/",)
 	var err error
@@ -17,10 +18,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	defer utilis.DB.Close()
 	utilis.CreateTables()
-
+	
 	routes.SetupRoutes()
 
 	err = http.ListenAndServe(":8080", nil)

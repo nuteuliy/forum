@@ -15,11 +15,13 @@
         </nav>
     </header>
     <main>
-        <form action="/register" method="post">
+        <form id="registrationForm">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
+            <div class="error email-error">{{.EmailError}}</div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
+            <div class="error username-error">{{.UsernameError}}</div>
             <label for="password">Password:</label>
       
             <div class="password-container">
@@ -27,7 +29,7 @@
                 <button type="button" id="toggle-password" class="toggle-button">Show</button>
             </div>
 
-           
+            <div class="error password-error">{{.PasswordError}}</div>
             <button type="submit">Register</button>
         </form>
     </main>

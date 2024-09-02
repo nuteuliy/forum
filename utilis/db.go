@@ -9,7 +9,9 @@ import (
 )
 
 var DB *sql.DB
+// type DB interface {
 
+// }
 func OpenDatabase(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", dsn)
 	if err != nil {
