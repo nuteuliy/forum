@@ -17,11 +17,13 @@
     <main>
         <form id="registrationForm">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
             <div class="error email-error">{{.EmailError}}</div>
+            <input type="email" id="email" name="email" required>
+            
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
             <div class="error username-error">{{.UsernameError}}</div>
+            <input type="text" id="username" name="username" required>
+            
             <label for="password">Password:</label>
       
             <div class="password-container">

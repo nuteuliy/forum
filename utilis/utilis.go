@@ -1,6 +1,7 @@
 package utilis
 
 import (
+	"database/sql"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -11,6 +12,16 @@ func UserExists(email string) bool {
 	var count int
 
 	row := DB.QueryRow(`SELECT COUNT(*) FROM users WHERE email = ?`, email)
+	err := row.Scan(&count)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count > 0
+}
+func UserNameExist(username string) bool {
+	var count int
+	row := DB.QueryRow(`SELECT COUNT(*) FROM users WHERE username = ?`, username)
 	err := row.Scan(&count)
 	if err != nil {
 		log.Fatal(err)
@@ -32,4 +43,14 @@ func HashPassword(password string) (string, error) {
 		return "", err
 	}
 	return string(hashedPassword), nil
+}
+func CompareHashedPassword(username string, hashedPassword *string) error {
+
+	err := DB.QueryRow(`SELECT password_hash FROM users WHERE username = ?`, username).Scan(hashedPassword)
+
+	if err == sql.ErrNoRows {
+		return err
+	} else {
+		return nil
+	}
 }

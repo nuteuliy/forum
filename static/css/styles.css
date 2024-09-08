@@ -61,7 +61,12 @@ form button:hover {
     padding: 8px;
     box-sizing: border-box; /* Ensures padding is included in the width */
 }
-
+.error {
+    color: red;          
+    font-size: 0.875rem;  
+    font-weight: 400;     
+    margin-top: 0.5rem;   
+}
 .password-container .toggle-button {
     position: absolute;
     right: 56px;

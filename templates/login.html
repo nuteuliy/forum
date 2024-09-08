@@ -15,9 +15,11 @@
         </nav>
     </header>
     <main>
-        <form action="/login" method="post">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        <form id ="loginForm">
+            <label for="username">Email:</label>
+            <div class="error username-error-login"></div>
+            <input type="username" id="username" name="username" required>
+            <div class = "error password-error-login"></div>
             <label for="password">Password:</label>
             <div class="password-container">
                 <input type="password" id="password" name="password" required>

@@ -3,9 +3,13 @@ package handlers
 import (
 	"FORUM/utilis"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/http"
-	// "github.com/google/uuid"
+	"time"
+
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	// "golang.org/x/crypto/bcrypt"
 )
 
@@ -40,20 +44,23 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 		if utilis.UserExists(user.Email) {
 			w.Header().Set("Content-Type", "application/json")
-            json.NewEncoder(w).Encode(map[string]string{
-                "emailError": "Email already exists.",
-            })
-            return
-			
+			json.NewEncoder(w).Encode(map[string]string{
+				"emailError": "Email already exists.",
+			})
+			return
+
+		}
+		if utilis.UserNameExist(user.Username) {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]string{
+				"usernameError": "Username already exists.",
+			})
+			return
 		}
 		hashedPassword, err := utilis.HashPassword(user.Password)
 		if err != nil {
-			tmpl := template.Must(template.ParseFiles("templates/register.html"))
-			tmpl.Execute(w, map[string]string{
-				"EmailError":    "",
-				"UsernameError": "Username already exists.",
-				"PasswordError": "",
-			})
+			http.Error(w, "HashingPasswordError", http.StatusInternalServerError)
+
 			return
 		}
 
@@ -85,16 +92,48 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodPost {
-		var user struct {
-			Email    string `json:"email"`
+		var userLogin struct {
+			Username string `json:"username"`
 			Password string `json:"password"`
 		}
-
-		if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-			http.Error(w, "Invalid input", http.StatusBadRequest)
+		if err := json.NewDecoder(r.Body).Decode(&userLogin); err != nil {
+			http.Error(w, "HashingPasswordError", http.StatusInternalServerError)
 			return
 		}
 
+		var hashedPassword string
+		// if !utilis.UserNameExist(userLogin.Username) {
+		// 	w.Header().Set("Content-Type", "application/json")
+		// 	json.NewEncoder(w).Encode(map[string]string{
+		// 		"usernameError": "Username does not exist",
+		// 	})
+		// 	return
+		// }
+
+		if err := utilis.CompareHashedPassword(userLogin.Username, &hashedPassword); err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]string{
+				"usernameError": "Username Does not exist ",
+			})
+			return
+		}
+		
+		if bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(userLogin.Password)) != nil {
+			fmt.Println("i am here ")
+			w.Header().Set("Content-Type", "application/json")
+
+			json.NewEncoder(w).Encode(map[string]string{
+				"passwordError": "Invalid password",
+			})
+			return
+		}
+		sessionID := uuid.New().String()
+		expiration := time.Now().Add(24 * time.Hour)
+		cookie := http.Cookie{Name: "session_token", Value: sessionID, Expires: expiration}
+		http.SetCookie(w, &cookie)
+
+		// Redirect the user to the posts page
+		// http.Redirect(w, r, "/posts", http.StatusSeeOther)
 		// row := utils.DB.QueryRow("SELECT password FROM users WHERE email = ?", user.Email)
 		// var hashedPassword string
 		// if err := row.Scan(&hashedPassword); err != nil {
