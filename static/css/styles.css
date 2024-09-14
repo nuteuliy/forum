@@ -80,3 +80,51 @@ form button:hover {
 .password-container .toggle-button:hover {
     color: #555;
 }
+.create-button{
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+.create-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+article {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Post title styling */
+article h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Post content styling */
+article p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Metadata styling */
+article small {
+    color: #888;
+    font-size: 12px;
+}
+
+/* Hover effect for posts */
+article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

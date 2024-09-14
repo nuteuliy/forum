@@ -3,7 +3,6 @@ package handlers
 import (
 	"FORUM/utilis"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"net/http"
 	"time"
@@ -102,6 +101,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var hashedPassword string
+		var userID int
 		// if !utilis.UserNameExist(userLogin.Username) {
 		// 	w.Header().Set("Content-Type", "application/json")
 		// 	json.NewEncoder(w).Encode(map[string]string{
@@ -110,16 +110,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// 	return
 		// }
 
-		if err := utilis.CompareHashedPassword(userLogin.Username, &hashedPassword); err != nil {
+		if err := utilis.CompareHashedPassword(userLogin.Username, &hashedPassword, &userID); err != nil {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(map[string]string{
 				"usernameError": "Username Does not exist ",
 			})
 			return
 		}
-		
+
 		if bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(userLogin.Password)) != nil {
-			fmt.Println("i am here ")
+
 			w.Header().Set("Content-Type", "application/json")
 
 			json.NewEncoder(w).Encode(map[string]string{
@@ -128,7 +128,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		sessionID := uuid.New().String()
+
 		expiration := time.Now().Add(24 * time.Hour)
+		err := utilis.StoreSession(sessionID, userID, expiration)
+		if err != nil {
+			http.Error(w, "Failed to store the session", http.StatusInternalServerError)
+		}
 		cookie := http.Cookie{Name: "session_token", Value: sessionID, Expires: expiration}
 		http.SetCookie(w, &cookie)
 

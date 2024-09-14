@@ -13,9 +13,17 @@
             <a href="/">Home</a>
             <a href="/login">Login</a>
             <a href="/register">Register</a>
+            <a href="/create-post" class = "create-button">Create Post</a>
         </nav>
     </header>
     <main>
+        {{range . }}
+        <article>
+            <h2>{{.Title}}</h2>
+            <p>{{.Content}}</p>
+            <p><small>Posted by User ID: {{.UserID}} on {{.CreatedAt}}</small></p>
+        </article>
+        {{end}}
         <!-- Dynamic content will be injected here -->
     </main>
     <script src="/static/js/scripts.js"></script>

@@ -72,9 +72,7 @@ func InsertLike(userID, postID, commentID int, isLike bool) error {
 	return err
 }
 
-func GetAllPosts() (*sql.Rows, error) {
-	return DB.Query(`SELECT * FROM posts`)
-}
+
 
 // GetPostsByCategory retrieves posts associated with a specific category.
 func GetPostsByCategory(categoryName string) (*sql.Rows, error) {
@@ -113,4 +111,8 @@ func GetLikeDislikeCounts(postID int) (likeCount, dislikeCount int, err error) {
             (SELECT COUNT(*) FROM likes WHERE post_id = ? AND is_like = 0) AS dislike_count
     `, postID, postID).Scan(&likeCount, &dislikeCount)
 	return
+}
+func InsertUser(email, username, passwordHash string) error {
+	_, err := DB.Exec(`INSERT INTO users (email, username, password_hash) VALUES (?, ?, ?)`, email, username, passwordHash)
+	return err
 }
