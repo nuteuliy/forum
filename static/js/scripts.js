@@ -14,7 +14,53 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+    
+    const postForm = document.getElementById('create-post-form')
+    
+    if (postForm) {
+        postForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
 
+            // Collect form data
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+            
+            // Create a user object
+            const postData = {
+                title: title,
+                content: content
+            };
+
+            // Send the JSON data via fetch
+            fetch('http://localhost:8080/create-post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData) // Convert the JavaScript object to a JSON string
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Redirect to login or another page
+                } else {
+                    return response.json(); // Assuming error messages are returned as text
+                }
+            })
+            .then(data => {
+                // Update your form with error messages from the server
+                
+                const wordCountError = document.querySelector('.wordCountError');
+                
+
+                // Display errors
+                wordCountError.textContent = data.countError || '';
+                
+            })
+            .catch(error => {
+                console.error('Error during registration:', error);
+            });
+        });
+    }
     // Handle registration form
     const registrationForm = document.getElementById('registrationForm');
     if (registrationForm) {

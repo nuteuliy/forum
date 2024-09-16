@@ -11,6 +11,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		http.Error(w, "Unable to load posts", http.StatusInternalServerError)
+		return 
 	}
 
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))

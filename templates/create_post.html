@@ -8,15 +8,17 @@
 </head>
 <body>
     <h1>Create a New Post</h1>
-    <form action="/create-post" method="POST">
+    <form id="create-post-form" >
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title" required><br><br>
-
+        
         <label for="content">Content:</label><br>
+        <div class = "error wordCountError"></div>
         <textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
 
         <input type="submit" value="Create Post">
     </form>
     <a href="/">Back to Home</a>
+    <script src="/static/js/scripts.js"></script>
 </body>
 </html>

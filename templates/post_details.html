@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Post Details</h1>
+        <a href="/">Back to Home</a>
+    </header>
+    <main>
+        <article>
+            <h2>{{.Title}}</h2>
+            <!-- Check if the user is authorized to display full content -->
+            {{if .IsAuthorized}}
+                <p>{{.FullContent}}</p>
+            {{else}}
+                <p>{{.PreviewContent}}</p>
+                <button onclick="showLoginModal()">Login to see full content</button>
+            {{end}}
+            <p><small>Posted by User ID: {{.UserID}} on {{.CreatedAt}}</small></p>
+        </article>
+    </main>
+</body>
+</html>

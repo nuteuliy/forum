@@ -11,6 +11,7 @@ func SetupRoutes() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", handlers.IndexHandler)
+	http.HandleFunc("/post", handlers.PostDetailsHandler)
 	http.HandleFunc("/register", handlers.RegisterHandler)
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/create-post", handlers.CreatePostHandler)

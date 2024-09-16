@@ -19,8 +19,8 @@
     <main>
         {{range . }}
         <article>
-            <h2>{{.Title}}</h2>
-            <p>{{.Content}}</p>
+            <h2><a href="/post?id={{.ID}}" class = "post-link">{{.Title}}</a></h2>
+            <p>{{.Preview}}</p>
             <p><small>Posted by User ID: {{.UserID}} on {{.CreatedAt}}</small></p>
         </article>
         {{end}}
