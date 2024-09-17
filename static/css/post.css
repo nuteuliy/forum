@@ -79,8 +79,8 @@ a:hover {
 }
 .error {
     color: #d9534f; /* Red color for error messages */
-    background-color: #f8d7da; /* Light red background for visibility */
-    border: 1px solid #f5c6cb; /* Red border */
+    /* background-color: #f8d7da; Light red background for visibility */
+    /* border: 1px solid #f5c6cb; Red border */
     padding: 10px; /* Padding around the text */
     margin: 10px 0; /* Margin around the message */
     border-radius: 4px; /* Rounded corners */

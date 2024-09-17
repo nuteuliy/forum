@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: JSON.stringify(postData) // Convert the JavaScript object to a JSON string
             })
             .then(response => {
+                
                 if (response.redirected) {
                     window.location.href = response.url; // Redirect to login or another page
                 } else {
@@ -49,12 +50,13 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 // Update your form with error messages from the server
                 
+                console.log(data)
                 const wordCountError = document.querySelector('.wordCountError');
                 
 
                 // Display errors
                 wordCountError.textContent = data.countError || '';
-                
+                wordCountError.style.display = 'block'
             })
             .catch(error => {
                 console.error('Error during registration:', error);

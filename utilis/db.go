@@ -43,8 +43,8 @@ func CreateTables() {
 // }
 
 // InsertPost inserts a new post into the database.
-func InsertPost(userID int, title, content string) error {
-	_, err := DB.Exec(`INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)`, userID, title, content)
+func InsertPost(userID int, title, content,preview string) error {
+	_, err := DB.Exec(`INSERT INTO posts (user_id, title, content, preview) VALUES (?, ?, ?, ?)`, userID, title, content,preview)
 	return err
 }
 

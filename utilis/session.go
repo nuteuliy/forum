@@ -12,6 +12,7 @@ type Post struct {
 	Content   string
 	Preview	  string
 	CreatedAt time.Time
+	
 	// UpdatedAt time.Time
 }
 
@@ -36,7 +37,7 @@ func GetSession(sessionID string) (int, error) {
 	return userID, nil
 }
 func GetAllPosts() ([]Post, error) {
-	rows, err := DB.Query(`SELECT id, user_id, title, content, created_at 
+	rows, err := DB.Query(`SELECT id, user_id, title, content, created_at, preview 
 		FROM posts 
 		ORDER BY created_at DESC ;`)
 
@@ -48,9 +49,10 @@ func GetAllPosts() ([]Post, error) {
 	var posts []Post
 	for rows.Next() {
 		var post Post
-		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt); err != nil {
+		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt,&post.Preview); err != nil {
 			return nil, err
 		}
+		
 		posts = append(posts, post)
 	}
 

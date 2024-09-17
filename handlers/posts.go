@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -16,7 +17,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodPost {
-
+		var preview string
 		cookie, err := r.Cookie("session_token")
 		if err != nil {
 
@@ -47,14 +48,13 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 				"countError": "Minimum number of words must be 100",
 			})
 			return
-		}
-		// else {
-		// 	words := strings.Fields(PostData.Content)
+		} else {
+			words := strings.Fields(PostData.Content)
 
-		// 	preview := strings.Join(words[:30], " ") + "..."
-		// }
-		// Insert the new post into the database
-		err = utilis.InsertPost(userID, PostData.Title, PostData.Content)
+			preview = strings.Join(words[:30], " ") + "..."
+		}
+		// Insert the new post ito the databasen
+		err = utilis.InsertPost(userID, PostData.Title, PostData.Content, preview)
 		if err != nil {
 			http.Error(w, "Error creating post", http.StatusInternalServerError)
 			return

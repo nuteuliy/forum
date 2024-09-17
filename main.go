@@ -12,7 +12,6 @@ import (
 
 func main() {
 	// http.HandleFunc("/",)
-
 	var err error
 	
 	utilis.DB, err = utilis.OpenDatabase(config.DatabaseDSN)
